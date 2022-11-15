@@ -35,5 +35,5 @@ Starter code for smartbots 2023
 
 ### Bid Denotation
 
-0 -> Pass Bid
-16...28 -> Available Bid
+- 0 -> Pass Bid
+- 16...28 -> Available Bid
