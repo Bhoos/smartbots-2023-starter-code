@@ -1,6 +1,6 @@
 {
   "name": "@bhoos/smartbots-2023-starter-code",
-  "description": "Starter code for smartbots 2023",
+  "description": "Node bare bones starter code for smartbots 2023",
   "author": "Prateek Thapa",
   "dependencies": {
     "body-parser": "^1.20.1",

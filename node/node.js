@@ -1,47 +1,94 @@
-const express = require("express");
-const cors = require("cors");
+const { createServer } = require("http");
 
-const app = express();
-const port = 8001;
+const PORT = 8001;
 
-app.use(express.json());
-app.use(cors({ origin: "*" }));
+const server = createServer((req, res) => {
+  if (req.url) res.setHeader("Content-Type", "application/json");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
 
-app.get("/hi", (req, res) => {
-  console.log("Hit the endpoint. Sending hello...");
-  res.send("hello");
+  if (req.method === "OPTIONS") {
+    res.end();
+    return;
+  }
+
+  let payload = "";
+  req.on("data", (chunk) => {
+    payload += chunk;
+  });
+
+  req.on("end", () => {
+    let result = { error: "Unknown request" };
+
+    if (req.url.endsWith("hi")) {
+      result = hello(payload);
+    } else if (req.url.endsWith("bid")) {
+      result = bid(JSON.parse(payload));
+    } else if (req.url.endsWith("chooseTrump")) {
+      result = chooseTrump(JSON.parse(payload));
+    } else if (req.url.endsWith("play")) {
+      result = play(JSON.parse(payload));
+    }
+
+    res.write(JSON.stringify(result));
+    res.end();
+  });
 });
 
-function response(res) {
+server.listen(PORT, () => {
+  console.log(`Voila, your server is listening on port: ${PORT}`);
+});
+// ----------------------------------------
+
+function hello(req, res) {
+  console.log("Hit the endpoint. Sending hello...");
+  return { value: "hello" };
+}
+
+/**
+ * Please note: these are the bare starter code that should get you started
+ * Take it as a reference or example, not necessarily the code you would like to start with
+ */
+
+const MIN_BID = 16;
+const PASS_BID = 0;
+
+function bid(payload) {
+  if (payload.bidState["defender-bid"] === 0) {
+    return {
+      bid: MIN_BID,
+    };
+  } else {
+    return {
+      bid: PASS_BID,
+    };
+  }
+}
+
+function chooseTrump(payload) {
+  /**
+   * Please note: this is bare implementation of the chooseTrump function
+   * Do make changes to this function to throw valid card according to the context of the game.
+   */
   return {
-    value: res,
+    suit: "H",
   };
 }
 
-app.post("/bid", (req, res) => {
-  if (req.body.bidState["defender-bid"] === 0) {
-    const minBid = 16;
-    return res.send(response({ bid: minBid }));
-  } else {
-    return res.send(response({ bid: "pass" }));
-  }
-});
+function play(payload) {
+  /**
+   * Please note: this is bare implementation of the play function
+   * It just returns the last card that we have.
+   * Do make changes to this function to throw valid card according to the context of the game.
+   */
+  const cards = payload.cards;
+  const randomNotNeccessarilyValidCard = cards[cards.length - 1];
 
-app.post("/chooseTrump", (req, res) => {
-  const cards = req.body.cards;
-  const randomCard = cards[cards.length - 1];
-  const suit = randomCard[randomCard.length - 1];
-
-  return res.send(response({ suit }));
-});
-
-app.post("/play", (req, res) => {
-  const cards = req.body.cards;
-  const randomCard = cards[cards.length - 1];
-
-  return res.send(response({ card: randomCard }));
-});
-
-app.listen(port, () => {
-  console.log(`Voila, your server is running on port: ${port}`);
-});
+  return {
+    card: randomNotNeccessarilyValidCard,
+  };
+}

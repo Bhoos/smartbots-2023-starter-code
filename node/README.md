@@ -8,7 +8,7 @@ yarn add express cors
 
 We will use `express` as the server for ease of purpose.
 
-2. Setup basic express server
+2. Setup basic express server in your `node-express.js` file
 
 ```javascript
 const express = require("express");
@@ -25,10 +25,10 @@ app.listen(port, () => {
 });
 ```
 
-3. Open the terminal and run the express server
+1. Open the terminal and run the express server
 
 ```
-node node.js
+node node-express.js
 ```
 
 You should see the following message in the terminal
