@@ -53,7 +53,7 @@ function bid(req, res) {
 function chooseTrump(req, res) {
   /**
    * Please note: this is bare implementation of the chooseTrump function
-   * Do make changes to this function to throw valid card according to the context of the game.
+   * Do make changes to this function to throw valid suit according to the context of the game.
    */
   return res.send({ suit: "H" });
 }

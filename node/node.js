@@ -24,6 +24,17 @@ const server = createServer((req, res) => {
   req.on("end", () => {
     let result = { error: "Unknown request" };
 
+    /*
+      ####################################
+      #     ENDPOINTS       #
+      ####################################
+  */
+
+    /**
+     * These are the endpoints that you should implement on your own.
+     * We call your endpoints and expect valid response.
+     * According to the endpoints, the match is played and the tournament is run.
+     */
     if (req.url.endsWith("hi")) {
       result = hello(payload);
     } else if (req.url.endsWith("bid")) {
@@ -72,7 +83,7 @@ function bid(payload) {
 function chooseTrump(payload) {
   /**
    * Please note: this is bare implementation of the chooseTrump function
-   * Do make changes to this function to throw valid card according to the context of the game.
+   * Do make changes to this function to throw valid suit according to the context of the game.
    */
   return {
     suit: "H",
