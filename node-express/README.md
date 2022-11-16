@@ -42,9 +42,23 @@ Voila, your server is running on port: 8001
 ```javascript
 app.get("/hi", (req, res) => {
   console.log("Hit the endpoint. Sending hello...");
-  res.send("hello");
+  res.send({ value: "hello" });
 });
 ```
 
 5. Open your browser and enter `http://localhost:8001/hi` in the website section.
    You should get `hello` as the response.
+
+## How to start
+
+1. Install node_modules
+
+```
+yarn
+```
+
+2. Run node-express.js file
+
+```
+node node-express.js
+```
