@@ -35,9 +35,28 @@ def hi(request: Request):
 @app.route("/bid", methods=["POST"])
 def bid(request: Request):
     """
-    Please note: this is bare implementation of the bid function.
-    Do make changes to this function to throw valid bid according to the context of the game.
+    Request data format:
+    {
+        "playerId": "A1", # own player id
+        "playerIds": ["A1", "B1", "A2", "B2"],  # player ids in order
+        "timeRemaining": 1200,
+        "cards": ["JS", "TS", "KH", "9C"],      # own cards
+        "bidHistory": [ ["A1", 16],             # bidding history in chronological order
+                        ["B1",17], 
+                        ["A1", 17], 
+                        ["B1", 0], 
+                        ["A2", 0], 
+                        ["B2", 0]
+                    ],
+        "bidState": {
+            "defenderId": "A1",
+            "challengerId": "B1",
+            "defenderBid": 16,
+            "challengerBid": 17
+        },
+    }
     """
+    
     body = request.json
     print(body)
     
@@ -48,9 +67,22 @@ def bid(request: Request):
 @app.route("/chooseTrump", methods=["POST"])
 def choose_trump(request: Request):
     """
-    Please note: this is bare implementation of the chooseTrump function.
-    Do make changes to this function to throw valid card according to the context of the game.
+    Request data format:
+    {
+        "playerId": "A1",                       # own player id
+        "playerIds": ["A1", "B1", "A2", "B2"],  # player ids in order
+        "timeRemaining": 1200,
+        "cards": ["JS", "TS", "KH", "9C"],      # own cards
+        "bidHistory": [ ["A1", 16],             # bidding history in chronological order
+                        ["B1",17], 
+                        ["A1", 17], 
+                        ["B1", 0], 
+                        ["A2", 0], 
+                        ["B2", 0]
+                    ], 
+    }
     """
+    
     body = request.json
     print(body)
     
@@ -61,10 +93,44 @@ def choose_trump(request: Request):
 @app.route("/play", methods=["POST"])
 def play(request: Request):
     """
-    Please note: this is bare implemenation of the play function.
-    It just returns the last card that we have.
-    Do make changes to the function to throw valid card according to the context of the game.
+    Request data format:
+    {
+        "playerId": "A2", # own player id
+        "playerIds": ["A1", "B1", "A2", "B2"],                  # player ids in order
+        "timeRemaining": 1500,
+        "teams": [
+            { "players": ["A1", "A2"], "bid": 17, "won": 0 },   # first team information
+            { "players": ["B1", "B2"], "bid": 0, "won": 4 },    # second team information
+        ],
+        "cards": ["JS", "TS", "KH", "9C", "JD", "7D", "8D"],    # own cards
+        "bidHistory": [ ["A1", 16],                             # bidding history in chronological order
+                        ["B1",17], 
+                        ["A1", 17], 
+                        ["B1", 0], 
+                        ["A2", 0], 
+                        ["B2", 0]
+                    ],
+        "played": ["9S", "1S", "8S"],
+        "handsHistory": [
+            [
+                "A1", # player who threw the first card ("7H") 
+                ["7H", "1H", "8H", "JH"],           # cards that thrown in the first hand
+                "B2" # winner of this hand
+            ]
+        ],
+        
+        # represents the suit if available, the trumpSuit is only present for the player who reveals the trump
+        # after the trump is revealed, the trumpSuit is present for all the players
+        "trumpSuit": false | "H",
+
+        # only after the trump is revealed by the player the information is revealed
+        "trumpRevealed": false | {
+            hand: 2,            # represents the hand at which the trump was revealed
+            playerId: "A2",     # the player who revealed the trump
+        },
+    }
     """
+    
     body = request.json
     print(body)
     
