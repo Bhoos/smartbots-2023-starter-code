@@ -37,16 +37,7 @@ You should see the following message in the terminal
 Voila, your server is running on port: 8001
 ```
 
-4. Add `/hi` route to your express app.
-
-```javascript
-app.get("/hi", (req, res) => {
-  console.log("Hit the endpoint. Sending hello...");
-  res.send({ value: "hello" });
-});
-```
-
-5. Open your browser and enter `http://localhost:8001/hi` in the website section.
+4. Open your browser and enter `http://localhost:8001/hi` in the website section.
    You should get `hello` as the response.
 
 ## How to start

@@ -1,0 +1,2 @@
+sanic==22.9.1
+Sanic-Cors==2.2.0
