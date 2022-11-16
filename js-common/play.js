@@ -98,6 +98,7 @@ function play(payload) {
   if (trumpSuit && !trumpRevealed) {
     return {
       /**  after revealing the trump, we must throw trump card */
+      revealTrump : true,
       card: last(ownCards),
     };
   }
