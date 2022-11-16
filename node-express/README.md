@@ -39,3 +39,17 @@ Voila, your server is running on port: 8001
 
 4. Open your browser and enter `http://localhost:8001/hi` in the website section.
    You should get `hello` as the response.
+
+## How to start
+
+1. Install node_modules
+
+```
+yarn
+```
+
+2. Run node-express.js file
+
+```
+node node-express.js
+```

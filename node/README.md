@@ -1,9 +1,7 @@
-## Basic Server setup
-
-1. Add dependencies - `express` and `cors`
+## How to run
 
 ```
-yarn add express cors
+node node.js
 ```
 
 We will use `express` as the server for ease of purpose.

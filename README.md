@@ -30,10 +30,10 @@ Starter code for smartbots 2023
 | Five  | 5   | 5S, 5D, 5H, 5C |
 | Four  | 4   | 4S, 4D, 4H, 4C |
 | Three | 3   | 3S, 3D, 3H, 3C |
-| Tow   | 2   | 2S, 2D, 2H, 2C |
+| Two   | 2   | 2S, 2D, 2H, 2C |
 | Ace   | 1   | 1S, 1D, 1H, 1C |
 
 ### Bid Denotation
 
-0 -> Pass Bid
-16...28 -> Available Bid
+- 0 -> Pass Bid
+- 16...28 -> Available Bid
