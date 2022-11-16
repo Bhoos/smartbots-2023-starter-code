@@ -1,9 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 
-const bid = require("./bid");
-const chooseTrump = require("./chooseTrump");
-const play = require("./play");
+const bid = require("../js-common/bid");
+const chooseTrump = require("../js-common/chooseTrump");
+const play = require("../js-common/play");
 
 const app = express();
 const port = 8001;
