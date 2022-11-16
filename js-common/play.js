@@ -96,9 +96,12 @@ function play(payload) {
    * this means we won the bidding phase, and set the trump
    */
   if (trumpSuit && !trumpRevealed) {
+    const trumpSuitCards = getSuitCards(ownCards, trumpSuit);
+
     return {
       /**  after revealing the trump, we must throw trump card */
-      card: last(ownCards),
+      revealTrump: true,
+      card: last(trumpSuitCards) || last(ownCards),
     };
   }
 
