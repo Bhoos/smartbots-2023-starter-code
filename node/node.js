@@ -1,5 +1,9 @@
 const { createServer } = require("http");
 
+const bid = require("../js-common/bid");
+const chooseTrump = require("../js-common/chooseTrump");
+const play = require("../js-common/play");
+
 const PORT = 8001;
 
 const server = createServer((req, res) => {
@@ -58,48 +62,4 @@ server.listen(PORT, () => {
 function hello(req, res) {
   console.log("Hit the endpoint. Sending hello...");
   return { value: "hello" };
-}
-
-/**
- * Please note: these are the bare starter code that should get you started
- * Take it as a reference or example, not necessarily the code you would like to start with
- */
-
-const MIN_BID = 16;
-const PASS_BID = 0;
-
-function bid(payload) {
-  if (payload.bidState["defender-bid"] === 0) {
-    return {
-      bid: MIN_BID,
-    };
-  } else {
-    return {
-      bid: PASS_BID,
-    };
-  }
-}
-
-function chooseTrump(payload) {
-  /**
-   * Please note: this is bare implementation of the chooseTrump function
-   * Do make changes to this function to throw valid suit according to the context of the game.
-   */
-  return {
-    suit: "H",
-  };
-}
-
-function play(payload) {
-  /**
-   * Please note: this is bare implementation of the play function
-   * It just returns the last card that we have.
-   * Do make changes to this function to throw valid card according to the context of the game.
-   */
-  const cards = payload.cards;
-  const randomNotNeccessarilyValidCard = cards[cards.length - 1];
-
-  return {
-    card: randomNotNeccessarilyValidCard,
-  };
 }
