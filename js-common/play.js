@@ -32,6 +32,8 @@ const { getSuitCards, last, getSuit } = require("./shared");
   }
  */
 function play(payload) {
+  console.log("play", JSON.stringify(payload));
+
   const ownCards = payload.cards;
   const firstCard = payload.played[0];
   const trumpSuit = payload.trumpSuit;
