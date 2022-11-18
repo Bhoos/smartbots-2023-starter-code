@@ -12,7 +12,7 @@ const { last, getSuit } = require("./shared");
  */
 
 function chooseTrump(payload) {
-  console.log(JSON.stringify(payload));
+  console.log("chooseTrump", JSON.stringify(payload));
 
   const ownCards = payload.cards;
   const lastCard = last(ownCards);

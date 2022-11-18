@@ -19,7 +19,7 @@ const MIN_BID = 16;
 const PASS_BID = 0;
 
 function bid(payload) {
-  console.log(JSON.stringify(payload));
+  console.log("bid", JSON.stringify(payload));
 
   if (payload.bidHistory.length === 0) {
     return {
