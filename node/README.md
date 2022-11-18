@@ -37,3 +37,7 @@ Voila, your server is running on port: 8001
 
 4.  Open your browser and enter `http://localhost:8001/hi` in the website section.
     You should get `hello` as the response.
+
+<br>
+
+Now head to sandbox and try the api checkpoints. Happy coding ( •̀ .̫ •́ )✧
