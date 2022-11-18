@@ -10,7 +10,7 @@ from bot import get_bid, get_trump_suit, get_play_card
 
 
 # to enable debug, run app with `DEBUG=1 python src/app.py`
-DEBUG = os.getenv("DEBUG", False)
+DEBUG = os.getenv("DEBUG", True)
 
 app = Sanic(__name__)
 CORS(app)
