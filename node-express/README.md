@@ -53,3 +53,7 @@ yarn
 ```
 node node-express.js
 ```
+
+<br>
+
+Now head to sandbox and try the api checkpoints. Happy coding ( •̀ .̫ •́ )✧
