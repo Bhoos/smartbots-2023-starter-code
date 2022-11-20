@@ -3,3 +3,4 @@ python/__pycache__/*
 .DS_STORE
 .pyc
 env
+rust/target
