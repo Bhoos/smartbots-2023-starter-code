@@ -13,8 +13,8 @@ RUN cargo build --release
 
 
 
-from gcr.io/distroless/cc
-workdir /app
-copy --from=builder /app/target/release/smart_bot ./
-expose 8001
-cmd ["/app/smart_bot"]
+FROM gcr.io/distroless/cc
+WORKDIR /app
+COPY --from=builder /app/target/release/smart_bot ./
+EXPOSE 8001
+CMD ["/app/smart_bot"]

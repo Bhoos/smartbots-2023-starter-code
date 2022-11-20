@@ -28,15 +28,16 @@ pub struct Card {
 }
 impl Card {
     pub fn new(c: String) -> Self {
+        // Rank of card in order by point value , face value
         let (rank, value) = match c.chars().nth(0).unwrap() {
-            'K' => (8, 0),
-            'Q' => (7, 0),
-            'J' => (6, 3),
-            'T' => (5, 1),
-            '9' => (4, 2),
-            '8' => (3, 0),
-            '7' => (2, 0),
-            '1' => (1, 1),
+            'J' => (8, 3),
+            '9' => (7, 2),
+            'T' => (6, 1),
+            '1' => (5, 1),
+            'K' => (4, 0),
+            'Q' => (3, 0),
+            '8' => (2, 0),
+            '7' => (1, 0),
             'X' => (0, 0), //dummy face value
             _ => panic!("Invalid face value"),
         };
@@ -89,7 +90,7 @@ impl fmt::Display for Card {
         write!(
             f,
             "{}{}",
-            ['K', 'Q', 'J', 'T', '9', '8', '7', '1'][8 - self.rank as usize],
+            ['J', '9', 'T', '1', 'K', 'Q', '8', '7'][8 - self.rank as usize],
             self.suit
         )
     }
