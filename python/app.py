@@ -1,5 +1,9 @@
 import os
 
+# load contents from .env file
+from dotenv import load_dotenv
+load_dotenv()
+
 from sanic import Sanic
 from sanic.response import json
 from sanic.request import Request
@@ -9,8 +13,9 @@ from bot import get_bid, get_trump_suit, get_play_card
 
 
 
-# to enable debug, run app with `DEBUG=1 python src/app.py`
+# to disable debug mode, set DEBUG=0 in .env file, otherwise debug mode is enabled by default as DEBUG=1
 DEBUG = os.getenv("DEBUG", True)
+if type(DEBUG) == str:DEBUG = int(DEBUG)
 
 app = Sanic(__name__)
 CORS(app)
