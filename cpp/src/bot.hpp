@@ -22,6 +22,12 @@ enum Rank
     ACE
 };
 
+constexpr int32_t CardValue(Rank rank)
+{
+    constexpr int32_t card_value[] = { 0, 0, 2, 1, 3, 0, 0, 1 };
+    return card_value[(int32_t)rank - (int32_t)Rank::SEVEN];
+}
+
 enum Suit
 {
     CLUBS = 0,
@@ -66,7 +72,7 @@ constexpr Suit StrToSuit(const char *suit)
 class Card
 {
 
-  public:
+public:
     Rank rank = ACE;
     Suit suit = SPADES;
 
@@ -165,7 +171,7 @@ class Card
     }
 };
 
-std::ostream &operator<<(std::ostream &os, Card const &card);
+std::ostream &operator<<(std::ostream &os, Card const& card);
 
 using PlayerID = std::string;
 
@@ -231,8 +237,6 @@ struct PlayPayload
 
 std::ostream &operator<<(std::ostream &os, PlayPayload const &payload);
 
-PlayerID      MapPlayerID(const char *player_id);
-
 struct PlayAction
 {
     enum Action
@@ -254,7 +258,7 @@ struct GameState
 
     // Time remaining is in milliseconds
     static Suit    ChooseTrump(PlayerID myid, std::vector<PlayerID> player_ids, std::vector<Card> mycards,
-                               int32_t time_remaining, std::vector<BidEntry> bid_history);
+        int32_t time_remaining, std::vector<BidEntry> bid_history);
     static int32_t Bid(PlayerID myid, std::vector<PlayerID> player_ids, std::vector<Card> mycards,
                        int32_t time_remaining, std::vector<BidEntry> bid_history, BidState const &bid_state);
 

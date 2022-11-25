@@ -80,7 +80,7 @@ int GameState::Bid(PlayerID myid, std::vector<PlayerID> player_ids, std::vector<
                    std::vector<BidEntry> bid_history, BidState const &bid_state)
 {
     // Either bid or pass
-    if (bid_state.defender.bid_value == -1 && bid_state.challenger.bid_value == -1)
+    if (bid_history.empty())
         return 16;
     return 0;
 }
@@ -94,14 +94,14 @@ PlayAction GameState::Play(PlayPayload payload)
         // Trump revealed code goes here
     }
 
-    PlayAction paction;
-    paction.action = PlayAction::PlayCard;
+    PlayAction p_action;
+    p_action.action = PlayAction::PlayCard;
 
     if (payload.played.empty())
     {
         // Cards in player hands
-        paction.played_card = payload.cards[0];
-        return paction;
+        p_action.played_card = payload.cards[0];
+        return p_action;
     }
 
     Suit lead_suit        = payload.played[0].suit;
@@ -115,13 +115,13 @@ PlayAction GameState::Play(PlayPayload payload)
 #endif
     if (same_suit_cards.empty())
     {
-        paction.played_card = payload.cards[0];
-        return paction;
+        p_action.played_card = payload.cards[0];
+        return p_action;
     }
 
     // Play card of same suit if available
-    paction.played_card = *same_suit_cards.begin();
-    return paction;
+    p_action.played_card = *same_suit_cards.begin();
+    return p_action;
     // This isn't complete implementation for total gameplay
 }
 

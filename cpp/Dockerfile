@@ -13,6 +13,6 @@ RUN apk add libstdc++
 
 EXPOSE 8001
 
-RUN g++ -O3 ./src/main.cpp ./src/bot.cpp -std=c++20 -o game29
+RUN g++ -Ofast ./src/main.cpp ./src/bot.cpp -march=native -std=c++20 -o game29
 
 CMD ["./game29"]

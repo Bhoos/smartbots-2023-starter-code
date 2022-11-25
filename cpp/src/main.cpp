@@ -62,7 +62,7 @@ int main(int argc, char** argv)
 		});
 
 	server.Post("/bid", [&](const httplib::Request& req, httplib::Response& res) {
-		res.set_header("Access-Control-Allow-Origin", "https://smartbots.bhoos.games");
+	res.set_header("Access-Control-Allow-Origin", "https://smartbots.bhoos.games");
 	res.set_header("connection", "keep-alive");
 
 	json                  data = json::parse(req.body);
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
 		});
 
 	server.Post("/chooseTrump", [&](const httplib::Request& req, httplib::Response& res) {
-		res.set_header("Access-Control-Allow-Origin", "https://smartbots.bhoos.games");
+	res.set_header("Access-Control-Allow-Origin", "https://smartbots.bhoos.games");
 	res.set_header("connection", "keep-alive");
 
 	json                  data = json::parse(req.body);
@@ -112,7 +112,7 @@ int main(int argc, char** argv)
 		});
 
 	server.Post("/play", [&](const httplib::Request& req, httplib::Response& res) {
-		res.set_header("Access-Control-Allow-Origin", "https://smartbots.bhoos.games");
+	res.set_header("Access-Control-Allow-Origin", "https://smartbots.bhoos.games");
 	res.set_header("connection", "keep-alive");
 	res.set_header("Access-Control-Allow-Methods", "DELETE, GET, OPTIONS, POST, PUT");
 
@@ -147,9 +147,7 @@ int main(int argc, char** argv)
 
 	auto const& player_cards_iter = data["played"];
 	for (auto const& card : player_cards_iter)
-	{
 		payload.played.push_back(Card::FromStr(card.dump().c_str()));
-	}
 
 	// Teams : teammate, win and bid
 	auto const& teams_data = data["teams"];
@@ -193,15 +191,15 @@ int main(int argc, char** argv)
 		});
 
 	server.Options("/(.*)", [](const httplib::Request& req, httplib::Response& res) {
-		res.set_header("Access-Control-Allow-Origin", "https://smartbots.bhoos.games");
+	res.set_header("Access-Control-Allow-Origin", "https://smartbots.bhoos.games");
 	res.set_header("Access-Control-Allow-Methods", "DELETE, GET, OPTIONS, POST, PUT");
 	res.set_header("Connection", "keep-alive");
 	res.set_header("Access-Control-Allow-Headers", "content-type");
 		});
 
 	// listen at port 7000 for Bhoos
-
 	if (!server.listen("0.0.0.0", 8001))
 		std::cout << "Can't listen at the provided port" << std::endl;
+
 	return 0;
 }

@@ -43,12 +43,13 @@ compile both files together and simply run the executable.<br>
 ### Windows 
 
 ```
-g++/clang++ ./src/main.cpp ./src/bot.cpp -o2 -std=c++17 -lws2_32 -o game
+g++/clang++ ./src/main.cpp ./src/bot.cpp -ofast -std=c++17 -march=native -lws2_32 -o game
 game.exe
 ```
 ### Linux 
 ```
-g++/clang++ ./src/main.cpp ./src/bot.cpp -o2 -std=c++17 -pthread -o game
+g++/clang++ ./src/main.cpp ./src/bot.cpp -ofast -std=c++17 -march=native -pthread -o game
 ./game
 ```
-<br>Info : This isn't thorougly tested. Feel free to report issues, bugs or unintended behaviors. 
+
+<br>Info : This isn't thorougly tested. Feel free to report issues, bugs or unintended behaviors. If you have trouble with docker submission or face performance regression, remove `-march-native` from the compiler flag inside dockerfile. 
