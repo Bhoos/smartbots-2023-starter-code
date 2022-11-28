@@ -1,8 +1,8 @@
 const { createServer } = require("http");
 
-const bid = require("../js-common/bid");
-const chooseTrump = require("../js-common/chooseTrump");
-const play = require("../js-common/play");
+const bid = require("./bid");
+const chooseTrump = require("./chooseTrump");
+const play = require("./play");
 
 const PORT = 8001;
 
