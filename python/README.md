@@ -2,6 +2,8 @@
 
 <small> Note: Make sure you're in the python subdirectory while executing these commands. </small>
 
+<br>
+
 1. Create a virtual environment
 
 ```
@@ -30,7 +32,7 @@ pip install -r requirements.txt
 3. Open the terminal and run the sanic server
 
 ```
-python app.py
+python src/app.py
 ```
 
 You should see the following message in the terminal
@@ -47,3 +49,46 @@ Goin' Fast @ http://0.0.0.0:8001
 <br>
 
 Now head to sandbox and try the api checkpoints. Happy coding ( •̀ .̫ •́ )✧
+
+<br>
+<br>
+
+
+## Docket File Submission
+
+1. Download the Docker GUI [here](https://docs.docker.com/get-docker/).
+
+2. Open the terminal and run the following command to build a docker image
+
+```
+docker build . -t <TAG>
+
+# for m1 mac
+docker buildx build --platform=linux/amd64 . -t <TAG>
+```
+
+once executed, the docker image is visible with
+
+```
+docker images
+```
+
+3. To export your docker image for submission, run
+
+<small> Note: Make sure gzip is intalled before proceeding. </small>
+
+```
+docker save <TAG> | gzip > <TAG>.tar.gz
+```
+
+4. To run the built container locally, run
+
+```
+docker run -p 8001:8001 -m=2048m --cpus=1 -it <TAG or IMAGE ID>
+```
+
+#. To delete your existing docker image, get the `IMAGE ID` from `docker images`, and run
+
+```
+docker rmi <IMAGE ID>
+```
