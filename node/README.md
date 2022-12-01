@@ -1,43 +1,61 @@
-## How to run
+## How to submit docker image
+<br />
+
+### Install docker
+
+You can install docker by following the instructions provided in the [Docker website](https://docs.docker.com/get-docker/).
+
+You can also install it by running
 
 ```
-node node.js
+brew install --cask docker
 ```
 
-We will use `express` as the server for ease of purpose.
+if you are using brew package manager.
 
-2. Setup basic express server in your `node-express.js` file
+You may need to provide previliged access to docker.
 
-```javascript
-const express = require("express");
-const cors = require("cors");
+<br />
 
-const app = express();
-const port = 8001;
+### Build container image
 
-app.use(express.json());
-app.use(cors({ origin: "*" }));
-
-app.listen(port, () => {
-  console.log(`Voila, your server is running on port: ${port}`);
-});
-```
-
-3. Open the terminal and run the express server
+Open terminal in this directory, ie. `node` and run the following command
 
 ```
-node node-express.js
+docker build --platform x86_64 -t <TAG> .
 ```
 
-You should see the following message in the terminal
+`<TAG>` is the name of your image. This builds the container image. The `platform` flag specifies that the architecture of the  docker image will be `x86_64`, which is the recommended architecture.
+
+<br />
+
+### Save the image
 
 ```
-Voila, your server is running on port: 8001
+docker save <TAG> | gzip > <TAG>.tar.gz
 ```
 
-4.  Open your browser and enter `http://localhost:8001/hi` in the website section.
-    You should get `hello` as the response.
+`docker save <TAG>` creates a tar archive of your docker image. By piping its output to `gzip` command, we create a `gzip` compressed archive.
 
-<br>
 
-Now head to sandbox and try the api checkpoints. Happy coding ( •̀ .̫ •́ )✧
+## Example
+
+Make sure docker is installed. Open Docker Desktop on your system.
+
+Open terminal in this directory, i.e. `smartbots-2023-starter-code/node`, and run the following command
+
+```
+docker build --platform x86_64 -t joker .
+```
+
+In your docker desktop dashboard, you will see a new entry in the Images tab, named `joker`. This means your docker build was successful.
+
+Now run the following command
+
+```
+docker save joker | gzip > joker.tar.gz
+```
+
+A new file will be created inside of your current directory named `joker.tar.gz`. This is the file you should upload in the Docker Submission tab of the Smartbots website.
+
+Good luck!
