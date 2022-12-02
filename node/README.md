@@ -37,6 +37,15 @@ docker save <TAG> | gzip > <TAG>.tar.gz
 
 `docker save <TAG>` creates a tar archive of your docker image. By piping its output to `gzip` command, we create a `gzip` compressed archive. This is the file you should upload using the smartbots website.
 
+<br />
+
+### Run the container locally
+
+```
+docker run -p 8001:8001 -m=2048m --cpus=1 -it <TAG or IMAGE ID>
+```
+
+<br />
 
 ### Remove the image
 

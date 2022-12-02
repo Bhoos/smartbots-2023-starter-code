@@ -33,7 +33,7 @@ docker save <TAG> | gzip > <TAG>.tar.gz
 docker run -p 8001:8001 -m=2048m --cpus=1 -it <TAG or IMAGE ID>
 ```
 
-#. To delete your existing docker image, get the `IMAGE ID` from `docker images`, and run
+#### To delete your existing docker image, get the `IMAGE ID` from `docker images`, and run
 
 ```
 docker rmi <IMAGE ID>

@@ -7,7 +7,7 @@ FROM python:3.11-alpine
 # This will be the base directory where our project will live. 
 # The name can be anything but for now, let's name it client since 
 # the bot is a single client in our game.
-WORKDIR /client
+WORKDIR client
 
 # ADD command adds the file or folder to the destination. 
 # Since the working directory is `./client`, it copies the file inside `./client`.
