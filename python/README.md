@@ -1,6 +1,6 @@
 
 
-## Docket File Submission
+## Docker File Submission
 
 1. Download the Docker GUI [here](https://docs.docker.com/get-docker/).
 
