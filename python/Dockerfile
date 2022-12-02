@@ -11,8 +11,9 @@ WORKDIR client
 
 # ADD command adds the file or folder to the destination. 
 # Since the working directory is `./client`, it copies the file inside `./client`.
-RUN mkdir ./souce
-ADD ./requirements.txt .
+# Copy requirements
+COPY requirements.txt requirements.txt
+COPY ./src .
 
 # RUN commands are run when the docker image is built. 
 # Prefer to use RUN commands to install packages, build packages 
@@ -30,4 +31,4 @@ EXPOSE 8001
 # CMD runs the specified command on docker image startup.
 # Note that we are inside the working directory `./client` so, 
 # `python app.py` is run inside the `./client` directory.
-CMD "python3" "app.py"
+CMD [ "python3", "app.py" ]
