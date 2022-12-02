@@ -35,7 +35,16 @@ docker build --platform x86_64 -t <TAG> .
 docker save <TAG> | gzip > <TAG>.tar.gz
 ```
 
-`docker save <TAG>` creates a tar archive of your docker image. By piping its output to `gzip` command, we create a `gzip` compressed archive.
+`docker save <TAG>` creates a tar archive of your docker image. By piping its output to `gzip` command, we create a `gzip` compressed archive. This is the file you should upload using the smartbots website.
+
+
+### Remove the image
+
+To delete your existing docker image, get the `IMAGE ID` from `docker images`, and run
+
+```
+docker rmi <IMAGE ID>
+```
 
 
 ## Example
@@ -56,6 +65,6 @@ Now run the following command
 docker save joker | gzip > joker.tar.gz
 ```
 
-A new file will be created inside of your current directory named `joker.tar.gz`. This is the file you should upload in the Docker Submission tab of the Smartbots website.
+A new file will be created inside of your current directory named `joker.tar.gz`. Now you can upload this file.
 
 Good luck!
