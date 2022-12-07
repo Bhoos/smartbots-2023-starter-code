@@ -1,31 +1,32 @@
 ## How to submit docker image
+
 <br />
 
 ### Install docker
 
-You can install docker by following the instructions provided in the [Docker website](https://docs.docker.com/get-docker/).
+You can install docker by following the instructions provided on the [Docker website](https://docs.docker.com/get-docker/).
 
-You can also install it by running
+You can also install it by running it
 
 ```
 brew install --cask docker
 ```
 
-if you are using brew package manager.
+if you are using the brew package manager.
 
-You may need to provide previliged access to docker.
+You may need to provide privileged access to docker.
 
 <br />
 
 ### Build container image
 
-Open terminal in this directory, ie. `node` and run the following command
+Open the terminal in this directory, ie. `node` and run the following command
 
 ```
 docker build --platform x86_64 -t <TAG> .
 ```
 
-`<TAG>` is the name of your image. This builds the container image. The `platform` flag specifies that the architecture of the  docker image will be `x86_64`, which is the recommended architecture.
+`<TAG>` is the name of your image. This builds the container image. The `platform` flag specifies that the architecture of the docker image will be `x86_64`, which is the recommended architecture.
 
 <br />
 
@@ -55,12 +56,11 @@ To delete your existing docker image, get the `IMAGE ID` from `docker images`, a
 docker rmi <IMAGE ID>
 ```
 
-
 ## Example
 
 Make sure docker is installed. Open Docker Desktop on your system.
 
-Open terminal in this directory, i.e. `smartbots-2023-starter-code/node`, and run the following command
+Open the terminal in this directory, i.e. `smartbots-2023-starter-code/node`, and run the following command
 
 ```
 docker build --platform x86_64 -t joker .
@@ -74,6 +74,6 @@ Now run the following command
 docker save joker | gzip > joker.tar.gz
 ```
 
-A new file will be created inside of your current directory named `joker.tar.gz`. Now you can upload this file.
+A new file will be created inside your current directory named `joker.tar.gz`. Now you can upload this file.
 
 Good luck!
