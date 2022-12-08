@@ -55,7 +55,7 @@ function play(payload) {
   }
 
   const firstCardSuit = getSuit(firstCard);
-  const ownSuitCards = getSuitCards(payload.cards, firstCardSuit);
+  const ownSuitCards = getSuitCards(ownCards, firstCardSuit);
 
   /** if we have the suit with respect to the first card, we throw it */
   if (ownSuitCards.length > 0) {

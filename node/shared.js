@@ -68,7 +68,7 @@ function isPartner(myIdx, maybePartnerIdx) {
 }
 
 function getPartnerIdx(myIdx) {
-  return (myIdx + 4 - 2) % 4;
+  return (myIdx + 2) % 4;
 }
 
 module.exports = {
