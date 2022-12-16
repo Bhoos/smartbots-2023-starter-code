@@ -1,5 +1,6 @@
 # Smartbots starter code for Go
-A stupid starter bot that always bids 0, reveals and plays trump cards whenever possible, and throws the first valid card it finds from the player's hand. Not really secure but suffices for submission.
+A stupid starter bot that always bids 0, reveals and plays trump cards whenever possible, and throws the first valid card (card of the current hand's suite if available) it finds from the player's deck. Not really secure but suffices for submission.
+
 ## Requirements
 Built in go 1.19, but should run on previous go versions (>=1.1)
 No need to install third party libraries.
