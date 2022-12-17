@@ -3,7 +3,7 @@ package models
 type TrumpRequest struct {
 	PlayerId      string        `json:"playerId"`
 	PlayerIds     []string      `json:"playerIds"`
-	TimeRemaining int           `json:"timeRemaining"`
+	TimeRemaining float64       `json:"timeRemaining"`
 	Cards         []string      `json:"cards"`
 	BidHistory    []interface{} `json:"bidHistory"`
 }
