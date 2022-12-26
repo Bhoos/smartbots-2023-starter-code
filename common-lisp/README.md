@@ -31,3 +31,7 @@ Preferably you would use an IDE with interactive REPL during development. See [E
 <br>
 
 Now head to sandbox and try the api checkpoints. Happy coding ( •̀ .̫ •́ )✧
+
+## Docker
+
+You can install Docker from [here](https://www.docker.com/products/docker-desktop/).
