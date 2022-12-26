@@ -10,7 +10,19 @@ No need to install third party libraries.
 go run .
 ```
 ## Running on Docker
-1. Install [docker](https://docs.docker.com/get-docker/)
+## Install Docker
+You can install docker from [here](https://docs.docker.com/get-docker/). If you are using Windows, see below.
+
+###  Docker on Windows
+
+1. Install Windows Subsystem for Linux (WSL) from Microsoft Store. We recommend [Ubuntu](https://apps.microsoft.com/store/detail/ubuntu/9PDXGNCFSCZV). 
+
+2. Download and install the Linux kernal update package from [Microsoft](https://learn.microsoft.com/en-us/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package).
+
+3. Install Docker Desktop from Docker [website](https://www.docker.com/products/docker-desktop/).
+
+## Using Docker
+
 2. Build the image
     ```sh
     docker build -t <TAG> .

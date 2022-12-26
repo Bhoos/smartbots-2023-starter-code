@@ -53,3 +53,7 @@ g++/clang++ ./src/main.cpp ./src/bot.cpp -ofast -std=c++17 -march=native -pthrea
 ```
 
 <br>Info : This isn't thorougly tested. Feel free to report issues, bugs or unintended behaviors. If you have trouble with docker submission or face performance regression, remove `-march-native` from the compiler flag inside dockerfile. 
+
+## Docker
+
+You can install Docker from [here](https://www.docker.com/products/docker-desktop/).
