@@ -30,7 +30,7 @@ pub struct BidPayload {
     pub player_id: String,
     pub player_ids: [String; 4],
     pub cards: Vec<String>,
-    pub time_remaining: u64,
+    pub time_remaining: f64,
     pub bid_history: Vec<(String, u32)>,
     pub bid_state: BidState,
 }
@@ -59,7 +59,7 @@ pub struct ChooseTrumpPayload {
     pub player_id: String,
     pub player_ids: [String; 4],
     pub cards: Vec<String>,
-    pub time_remaining: u64,
+    pub time_remaining: f64,
     pub bid_history: Vec<(String, u32)>,
 }
 
@@ -180,7 +180,7 @@ impl From<TrumpSuitRevealedEnum> for TrumpRevealed {
 pub struct PlayPayload {
     pub player_id: String,
     pub player_ids: [String; 4],
-    pub time_remaining: u64,
+    pub time_remaining: f64,
     pub teams: [Team; 2],
     pub cards: Vec<String>,
     pub bid_history: Vec<(String, u32)>,
