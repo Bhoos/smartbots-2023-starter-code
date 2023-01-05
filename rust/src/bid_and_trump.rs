@@ -1,10 +1,9 @@
-use crate::payload_types::{BidPayload, ChooseTrumpPayload};
 use crate::action_types::Action;
-const MIN_BID : u32 = 16;
-const PASS    : u32 = 0;
+use crate::payload_types::{BidPayload, ChooseTrumpPayload};
+const MIN_BID: u32 = 16;
+const PASS: u32 = 0;
 
-
-pub fn get_bid(payload : &BidPayload) -> Action {
+pub fn get_bid(payload: &BidPayload) -> Action {
     let min_bid = if payload.bid_history.len() == 0 {
         MIN_BID
     } else {
@@ -15,7 +14,7 @@ pub fn get_bid(payload : &BidPayload) -> Action {
         }
     };
     if min_bid <= MIN_BID {
-        Action::Bid(MIN_BID )
+        Action::Bid(MIN_BID)
     } else {
         Action::Bid(PASS)
     }
@@ -23,7 +22,9 @@ pub fn get_bid(payload : &BidPayload) -> Action {
 
 pub fn choose_trump(payload: &ChooseTrumpPayload) -> Action {
     for _ in payload.bid_history.iter() {}
-    use rand::{thread_rng, prelude::SliceRandom};
-    let response = crate::cards::Suit::the_suits().choose(&mut thread_rng()).unwrap();
+    use rand::{prelude::SliceRandom, thread_rng};
+    let response = crate::cards::Suit::the_suits()
+        .choose(&mut thread_rng())
+        .unwrap();
     Action::ChooseTrump(*response)
 }

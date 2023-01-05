@@ -1,6 +1,6 @@
-use serde::{Deserialize};
+use serde::Deserialize;
 
-/// datatypes for  post request`/bid` 
+/// datatypes for  post request`/bid`
 
 // ********************** For /bid *************************************** \\
 
@@ -14,30 +14,30 @@ pub struct BidState {
 }
 
 impl std::fmt::Display for BidState {
-    fn fmt(&self, f : &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "{{")?;
         writeln!(f, "        defenderId : {},", self.defender_id)?;
         writeln!(f, "        challengerId : {},", self.challenger_id)?;
         writeln!(f, "        defenderBid : {},", self.defender_bid)?;
         writeln!(f, "        challengerBid : {},", self.challenger_bid)?;
-        write!(f,"    }}")
+        write!(f, "    }}")
     }
 }
 
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct BidPayload {
-    pub player_id : String,
-    pub player_ids : [String; 4],
-    pub cards : Vec<String>,
-    pub time_remaining : u64,
-    pub bid_history : Vec< (String, u32) >,
-    pub bid_state   : BidState,
+    pub player_id: String,
+    pub player_ids: [String; 4],
+    pub cards: Vec<String>,
+    pub time_remaining: u64,
+    pub bid_history: Vec<(String, u32)>,
+    pub bid_state: BidState,
 }
 
 impl std::fmt::Display for BidPayload {
-    fn fmt(&self, f : &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f,"{{")?;
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "{{")?;
         writeln!(f, "    playerId : {},", self.player_id)?;
         writeln!(f, "    playerIds : {:?},", self.player_ids)?;
         writeln!(f, "    cards : {:?},", self.cards)?;
@@ -56,16 +56,16 @@ impl std::fmt::Display for BidPayload {
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ChooseTrumpPayload {
-    pub player_id : String,
-    pub player_ids : [String; 4],
-    pub cards : Vec<String>,
-    pub time_remaining : u64,
-    pub bid_history : Vec< (String, u32) >,
+    pub player_id: String,
+    pub player_ids: [String; 4],
+    pub cards: Vec<String>,
+    pub time_remaining: u64,
+    pub bid_history: Vec<(String, u32)>,
 }
 
 impl std::fmt::Display for ChooseTrumpPayload {
-    fn fmt(&self, f : &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f,"{{")?;
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "{{")?;
         writeln!(f, "    playerId : {},", self.player_id)?;
         writeln!(f, "    playerIds : {:?},", self.player_ids)?;
         writeln!(f, "    cards : {:?},", self.cards)?;
@@ -79,9 +79,6 @@ impl std::fmt::Display for ChooseTrumpPayload {
     }
 }
 
-
-
-
 // {
 //     "playerId":"A2",
 //     "playerIds":["A1","B1","A2","B2"],
@@ -90,20 +87,18 @@ impl std::fmt::Display for ChooseTrumpPayload {
 //     "bidHistory":[["A1",16],["B1",0]]
 // }
 
-
-
 // ********************** For /play *********************************** \\
 
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Team {
-    pub players : Vec<String>,
-    pub bid     : u32,
-    pub won     : u32,
+    pub players: Vec<String>,
+    pub bid: u32,
+    pub won: u32,
 }
 impl std::fmt::Display for Team {
-    fn fmt(&self, f : &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f,"{{")?;
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "{{")?;
         write!(f, "        players : {:?}", self.players)?;
         write!(f, "        bid : {:?}", self.bid)?;
         writeln!(f, "        won : {:?}", self.won)?;
@@ -111,25 +106,23 @@ impl std::fmt::Display for Team {
     }
 }
 
-
-
-
 // **************** Json Deserialization Tricks here ********************
 
 #[derive(PartialEq, Deserialize)]
 #[serde(untagged)]
-pub enum TrumpSuitEnum { // enum version
+pub enum TrumpSuitEnum {
+    // enum version
     Suit(String),
     NotShown(bool),
 }
 #[derive(Clone, Deserialize, PartialEq, Debug)]
 #[serde(from = "TrumpSuitEnum")]
-pub struct TrumpSuit (pub Option::<String>); // option version
+pub struct TrumpSuit(pub Option<String>); // option version
 impl From<TrumpSuitEnum> for TrumpSuit {
     fn from(t: TrumpSuitEnum) -> Self {
         match t {
-            TrumpSuitEnum::NotShown(_) => TrumpSuit (None),
-            TrumpSuitEnum::Suit(suit) => TrumpSuit (Some(suit)),
+            TrumpSuitEnum::NotShown(_) => TrumpSuit(None),
+            TrumpSuitEnum::Suit(suit) => TrumpSuit(Some(suit)),
         }
     }
 }
@@ -137,11 +130,11 @@ impl From<TrumpSuitEnum> for TrumpSuit {
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct TrumpRevealer {
-    pub hand   : usize,
-    pub player_id : String,
+    pub hand: usize,
+    pub player_id: String,
 }
 impl std::fmt::Display for TrumpRevealer {
-    fn fmt(&self, f : &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "{{")?;
         writeln!(f, "        hand : {}", self.hand)?;
         writeln!(f, "        player : {}", self.player_id)?;
@@ -151,20 +144,20 @@ impl std::fmt::Display for TrumpRevealer {
 
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(untagged)]
-pub enum TrumpSuitRevealedEnum { // enum version
+pub enum TrumpSuitRevealedEnum {
+    // enum version
     Revealed(TrumpRevealer),
     NotRevealed(bool),
 }
 
-
 #[derive(Clone, Deserialize, PartialEq, Debug)]
 #[serde(from = "TrumpSuitRevealedEnum")]
-pub struct TrumpRevealed (pub Option::<TrumpRevealer>); // option version
+pub struct TrumpRevealed(pub Option<TrumpRevealer>); // option version
 impl From<TrumpSuitRevealedEnum> for TrumpRevealed {
-    fn from(t : TrumpSuitRevealedEnum) -> Self {
+    fn from(t: TrumpSuitRevealedEnum) -> Self {
         match t {
-            TrumpSuitRevealedEnum::NotRevealed(_) => TrumpRevealed (None),
-            TrumpSuitRevealedEnum::Revealed(trump_revealer) => TrumpRevealed (Some(trump_revealer)),
+            TrumpSuitRevealedEnum::NotRevealed(_) => TrumpRevealed(None),
+            TrumpSuitRevealedEnum::Revealed(trump_revealer) => TrumpRevealed(Some(trump_revealer)),
         }
     }
 }
@@ -185,24 +178,24 @@ impl From<TrumpSuitRevealedEnum> for TrumpRevealed {
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct PlayPayload {
-    pub player_id : String,
-    pub player_ids : [String; 4],
-    pub time_remaining : u64,
-    pub teams : [Team; 2],
-    pub cards : Vec<String>,
-    pub bid_history : Vec< (String, u32) >,
-    
-    pub played : Vec<String>, // cards played in this hand, mover needs inference
-    pub hands_history : Vec<(String, Vec<String>, String)>, // (mover, cards, winner)
+    pub player_id: String,
+    pub player_ids: [String; 4],
+    pub time_remaining: u64,
+    pub teams: [Team; 2],
+    pub cards: Vec<String>,
+    pub bid_history: Vec<(String, u32)>,
+
+    pub played: Vec<String>, // cards played in this hand, mover needs inference
+    pub hands_history: Vec<(String, Vec<String>, String)>, // (mover, cards, winner)
     // #[serde(from = "TrumpSuitEnum")]
-    pub trump_suit : TrumpSuit,
+    pub trump_suit: TrumpSuit,
     // #[serde(from = "TrumpSuitRevealedEnum")]
-    pub trump_revealed : TrumpRevealed,
+    pub trump_revealed: TrumpRevealed,
 }
 
 impl std::fmt::Display for PlayPayload {
-    fn fmt(&self, f : &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f,"{{")?;
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "{{")?;
         writeln!(f, "    playerId : {},", self.player_id)?;
         writeln!(f, "    playerIds : {:?},", self.player_ids)?;
         writeln!(f, "    timeRemaining : {},", self.time_remaining)?;

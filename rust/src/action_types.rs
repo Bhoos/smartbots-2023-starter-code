@@ -12,7 +12,7 @@ pub enum Action {
     Hi,
     Bid(u32),
     ChooseTrump(cards::Suit),
-    Play(PlayAction)
+    Play(PlayAction),
 }
 use Action::*;
 use PlayAction::*;
@@ -23,36 +23,41 @@ impl Action {
     }
 }
 impl std::fmt::Display for Action {
-    fn fmt(&self, f : &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{{")?;
         match self {
-            Hi => write!(f,r#""value":"hello""#)?,
+            Hi => write!(f, r#""value":"hello""#)?,
             Bid(bid) => write!(f, "\"bid\":{}", bid)?,
             ChooseTrump(suit) => write!(f, "\"suit\":\"{}\"", suit)?,
 
             Play(CardThrow(card)) => write!(f, "\"card\":\"{}\"", card)?,
             Play(Trump(trumpcase)) => {
-                write!(f,r#""revealTrump":true"# )?;
+                write!(f, r#""revealTrump":true"#)?;
                 match trumpcase {
-                    RevealAndThrow(card) =>  write!(f, ",\"card\":\"{}\"", card)?,
+                    RevealAndThrow(card) => write!(f, ",\"card\":\"{}\"", card)?,
                     RevealOnly => (),
                 }
             }
         }
-        write!(f,"}}")
+        write!(f, "}}")
     }
 }
 #[test]
 pub fn display_action_jsons() {
-    use cards::Suit;
     use cards::Card;
+    use cards::Suit;
     // these three work
     println!("/hi \n{}", Hi.json_format());
     println!("/bid \n{}", Bid(5).json_format());
     println!("/chooseTrump \n{}", ChooseTrump(Suit::Heart).json_format());
     println!();
-    println!("/play \n{}", Play(CardThrow(Card::new(&String::from("JH")))).json_format());
+    println!(
+        "/play \n{}",
+        Play(CardThrow(Card::new(&String::from("JH")))).json_format()
+    );
     println!("/play \n{}", Play(Trump(RevealOnly)).json_format());
-    println!("/play \n{}", Play(Trump(RevealAndThrow(Card::new(&String::from("JS"))))).json_format());
-    
+    println!(
+        "/play \n{}",
+        Play(Trump(RevealAndThrow(Card::new(&String::from("JS"))))).json_format()
+    );
 }

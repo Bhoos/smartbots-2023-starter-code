@@ -1,15 +1,15 @@
-use actix_web::{App, HttpResponse, HttpServer, Responder, get, post, web, Result};
 use actix_cors::Cors;
+use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder, Result};
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .wrap(
                 Cors::default()
-                .allow_any_origin()
-                .allowed_methods(vec!["GET", "POST"])
-                .allow_any_header()
-                .max_age(300)
+                    .allow_any_origin()
+                    .allowed_methods(vec!["GET", "POST"])
+                    .allow_any_header()
+                    .max_age(300),
             )
             .service(hello)
             .service(get_bid)
@@ -21,14 +21,13 @@ async fn main() -> std::io::Result<()> {
     .await
 }
 
-const LOG : bool = true;
+const LOG: bool = true;
 
-
-mod bid_and_trump;
-mod play;
-mod payload_types;
 mod action_types;
+mod bid_and_trump;
 mod cards;
+mod payload_types;
+mod play;
 
 use action_types::*;
 // use bid_and_trump::*;
@@ -38,25 +37,24 @@ async fn hello() -> impl Responder {
     let hello = Action::Hi.json_format();
     if LOG {
         // use cards::*;
-        println!("\n/hi\n{}",hello);
+        println!("\n/hi\n{}", hello);
     }
     HttpResponse::Ok().body(hello)
 }
 
 #[post("/bid")]
-async fn get_bid(payload : web::Json<payload_types::BidPayload>) -> Result<String> {
+async fn get_bid(payload: web::Json<payload_types::BidPayload>) -> Result<String> {
     let response = bid_and_trump::get_bid(&payload).json_format();
     if LOG {
         println!("\n/bid");
         println!("payload = {}", payload);
         println!("response = {}", response);
-
     }
     Ok(response)
 }
 
 #[post("/chooseTrump")]
-async fn choose_trump(payload: web::Json<payload_types::ChooseTrumpPayload>)  -> Result<String> {
+async fn choose_trump(payload: web::Json<payload_types::ChooseTrumpPayload>) -> Result<String> {
     // let response = format!("{{\"suit\":\"{}\"}}", bid_and_trump::choose_trump(&payload));
     let response = bid_and_trump::choose_trump(&payload).json_format();
     if LOG {
@@ -68,7 +66,7 @@ async fn choose_trump(payload: web::Json<payload_types::ChooseTrumpPayload>)  ->
 }
 
 #[post("/play")]
-async fn make_move(payload : web::Json<payload_types::PlayPayload>) -> Result<String> {
+async fn make_move(payload: web::Json<payload_types::PlayPayload>) -> Result<String> {
     let response = play::make_move(&payload).json_format();
     // let response = Action::Play(PlayAction::CardThrow(
     //     cards::Card::new(&"JS".to_string())
