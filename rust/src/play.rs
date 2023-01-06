@@ -51,11 +51,13 @@ pub fn make_move(payload: &payload_types::PlayPayload) -> Action {
             }
 
             // Case III b B: I know trump card, which is already revealed. I can throw trump card or any card depending on game.
-            if let TrumpRevealed (Some::<TrumpRevealer>(trump_revealer)) = &payload.trump_revealed {
-                let trump_revealed_in_this_hand = payload.hands_history.len() + 1== trump_revealer.hand;
-                let i_revealed_trump_in_this_hand = trump_revealed_in_this_hand && (payload.player_id == trump_revealer.player_id);
+            if let TrumpRevealed(Some::<TrumpRevealer>(trump_revealer)) = &payload.trump_revealed {
+                let trump_revealed_in_this_hand =
+                    payload.hands_history.len() + 1 == trump_revealer.hand;
+                let i_revealed_trump_in_this_hand =
+                    trump_revealed_in_this_hand && (payload.player_id == trump_revealer.player_id);
 
-                if !i_revealed_trump_in_this_hand || !trump_revealed_in_this_hand{
+                if !i_revealed_trump_in_this_hand || !trump_revealed_in_this_hand {
                     // If it is not me who revealed trump in this round, I can throw any card
                     // Or it is not this round when trump was revealed, I can throw any card
                     // return Action::Play(CardThrow(*my_cards.last().unwrap()));
@@ -63,7 +65,6 @@ pub fn make_move(payload: &payload_types::PlayPayload) -> Action {
                 }
                 return Action::Play(CardThrow(*trump_suit_cards.last().unwrap()));
             }
-            
         }
     }
 

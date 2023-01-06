@@ -159,16 +159,16 @@ impl From<TrumpSuitRevealedEnum> for TrumpRevealed {
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct PlayPayload {
-    pub player_id: String,               // My player_id
-    pub player_ids: [String; 4],         // All 4 player_ids
-    pub time_remaining: f64,             // time remaining float value
-    pub teams: [Team; 2],                // Two teams
-    pub cards: Vec<String>,              // All remaining cards string
+    pub player_id: String,                                 // My player_id
+    pub player_ids: [String; 4],                           // All 4 player_ids
+    pub time_remaining: f64,                               // time remaining float value
+    pub teams: [Team; 2],                                  // Two teams
+    pub cards: Vec<String>,                                // All remaining cards string
     pub bid_history: Vec<(String, u32)>, // bid history, vector made of tuples (player_id, bid_by_plyer_id)
     pub played: Vec<String>,             // cards played in this hand, mover needs inference
     pub hands_history: Vec<(String, [String; 4], String)>, // player and winner of previous hands (mover, Vec<cardstring>, winner)
-    pub trump_suit: TrumpSuit,           // Trump Suit struct that wraps Option<Suit>, = either Some(Suit) or none
-    pub trump_revealed: TrumpRevealed,   // TrumpRevealed struct that wraps Option<TrumpRevealer>, = either Some(TrumpRevealer) or none
+    pub trump_suit: TrumpSuit, // Trump Suit struct that wraps Option<Suit>, = either Some(Suit) or none
+    pub trump_revealed: TrumpRevealed, // TrumpRevealed struct that wraps Option<TrumpRevealer>, = either Some(TrumpRevealer) or none
 }
 
 impl std::fmt::Display for PlayPayload {

@@ -169,17 +169,17 @@ pub fn get_deck() -> Vec<Card> {
     // However, I prefer another, itertools way
 
     let deck = itertools::iproduct!(
-        ['J', '9', '1', 'T', 'K', 'Q', '8', '7'].iter().map(|&c| (get_rank_value(c), c as u8)),
+        ['J', '9', '1', 'T', 'K', 'Q', '8', '7']
+            .iter()
+            .map(|&c| (get_rank_value(c), c as u8)),
         [Heart, Club, Spade, Diamond]
     )
-    .map(|(((rank, value), card), suit)|
-        Card {
-            rank,
-            value,
-            card,
-            suit,
-        }
-    )
+    .map(|(((rank, value), card), suit)| Card {
+        rank,
+        value,
+        card,
+        suit,
+    })
     .collect();
     deck
 }

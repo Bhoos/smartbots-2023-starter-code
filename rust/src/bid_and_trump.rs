@@ -5,19 +5,25 @@ const PASS: u32 = 0;
 
 // a function to choose bid
 pub fn get_bid(payload: &BidPayload) -> Action {
-    let min_bid = if payload.bid_history.len() == 0 { // if no one bid, yet, bid 16
+    let min_bid = if payload.bid_history.len() == 0 {
+        // if no one bid, yet, bid 16
         MIN_BID
-    } else { // if someone else bid already (maybe 0 when passed or some 16, 17, .. values)
-        if payload.player_id == payload.bid_state.defender_id { // I can match when I am defender
+    } else {
+        // if someone else bid already (maybe 0 when passed or some 16, 17, .. values)
+        if payload.player_id == payload.bid_state.defender_id {
+            // I can match when I am defender
             payload.bid_state.challenger_bid
-        } else { // I have to exceed when I am challenger
+        } else {
+            // I have to exceed when I am challenger
             payload.bid_state.defender_bid + 1
         }
     };
 
-    if min_bid <= MIN_BID { // I cannot bid less than 16
+    if min_bid <= MIN_BID {
+        // I cannot bid less than 16
         Action::Bid(MIN_BID)
-    } else { // In starter code, I will not bid more than 16
+    } else {
+        // In starter code, I will not bid more than 16
         Action::Bid(PASS)
     }
 }
