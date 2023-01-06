@@ -136,9 +136,9 @@ impl Card {
         if self.suit == ongoing_suit {
             return std::cmp::Ordering::Greater;
         }
-        
+
         return std::cmp::Ordering::Less;
-        
+
         // both are not ongoing suits
         // return self.rank.cmp(&other.rank);
     }
@@ -174,11 +174,7 @@ pub fn get_card_from_vec(cards_vec: &[String]) -> Vec<Card> {
 
 /// a function that separates out cards of same suit from given Vector<Card> and give Suit.
 pub fn get_same_suit_cards(cards: &[Card], suit: Suit) -> Vec<Card> {
-    let cards = cards
-        .iter()
-        .filter(|x| x.suit == suit)
-        .copied()
-        .collect();
+    let cards = cards.iter().filter(|x| x.suit == suit).copied().collect();
     cards
 }
 
@@ -193,10 +189,7 @@ fn get_higher_ranked_cards_any_suit(cards_vec: &[Card], the_card: Card) -> Vec<C
 }
 #[allow(dead_code)]
 /// a function that gets higher ranked cards if available, better version of bad function
-fn get_higher_ranked_cards_any_suit_if_available(
-    cards: &[Card],
-    card: Card,
-) -> Option<Vec<Card>> {
+fn get_higher_ranked_cards_any_suit_if_available(cards: &[Card], card: Card) -> Option<Vec<Card>> {
     let cards = get_higher_ranked_cards_any_suit(cards, card);
     if cards.is_empty() {
         None
@@ -207,10 +200,7 @@ fn get_higher_ranked_cards_any_suit_if_available(
 #[allow(dead_code)]
 /// a function that gets maximum card by rank, probably bad function
 fn get_max_card_of_any_suit(cards_vec: &[Card]) -> Option<Card> {
-    cards_vec
-        .iter()
-        .copied()
-        .max_by_key(|card| card.rank)
+    cards_vec.iter().copied().max_by_key(|card| card.rank)
 }
 
 /// a function that gets higher ranked cards compared to cards, factoring the ongoing suit and trump suit
@@ -239,19 +229,16 @@ pub fn get_higher_rank_cards_if_available(
 ) -> Option<Vec<Card>> {
     let cards = get_higher_rank_cards(cards, card, ongoing_suit, trump_suit);
     if cards.is_empty() {
-         None
+        None
     } else {
         Some(cards)
     }
 }
 
 pub fn get_max_card(cards_vec: &[Card], ongoing_suit: Suit, trump_suit: Suit) -> Option<Card> {
-    cards_vec
-        .iter()
-        .copied()
-        .max_by(|&card_a, &card_b| {
-            card_a.cmp_using_ongoing_and_trump_suit(card_b, ongoing_suit, trump_suit)
-        })
+    cards_vec.iter().copied().max_by(|&card_a, &card_b| {
+        card_a.cmp_using_ongoing_and_trump_suit(card_b, ongoing_suit, trump_suit)
+    })
 }
 
 /// a function that returns option representing Some(non_empty_vector_of_cards) or None, when same suit cards are none.
