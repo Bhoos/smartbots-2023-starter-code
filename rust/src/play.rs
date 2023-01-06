@@ -1,112 +1,95 @@
-use crate::cards::Card;
-use serde::{Deserialize, Serialize};
+use crate::action_types::{Action, PlayAction, TrumpCase};
+use crate::cards::{
+    get_higher_rank_cards, get_higher_rank_cards_if_available, get_max_card, get_same_suit_cards,
+    get_same_suit_cards_if_available,
+};
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum TrumpSuitEnum {
-    Card(String),
-    NotShown(bool),
-}
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum TrumpSuitRevealedEnum {
-    Revealed(TrumpRevealer),
-    NotRevealed(bool),
-}
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct TrumpRevealer {
-    player_id: String,
-    hand: i32,
-}
+// use Action::Play;
+use PlayAction::CardThrow;
+use PlayAction::Trump;
+use TrumpCase::RevealAndThrow;
+use TrumpCase::RevealOnly;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct PlayPayload {
-    pub player_id: String,
-    pub player_ids: Vec<String>,
-    pub time_remaining: i64,
-    pub teams: Vec<Team>,
-    pub cards: Vec<String>,
-    pub bid_history: Vec<(String, i64)>,
-    pub played: Vec<String>,
-    pub hands_history: Vec<(String, Vec<String>, String)>,
-    pub trump_suit: TrumpSuitEnum,
-    pub trump_revealed: TrumpSuitRevealedEnum,
-}
+use crate::cards::{self, Card, Suit};
+use crate::payload_types::{self, TrumpRevealed, TrumpRevealer};
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Team {
-    pub players: Vec<String>,
-    pub bid: i64,
-    pub won: i64,
-}
-
-fn move_json_response(card: &String) -> String {
-    format!("{{\"card\":\"{}\"}}", card)
-}
-fn reveal_trump_and_move_json_response(c: &String) -> String {
-    r#"{"revealTrump": true,"card":""#.to_string() + c + r#""}"#
-}
-
-pub fn get_move(payload: &PlayPayload) -> String {
-    // println!("{:#?}", payload);
-
-    if payload.played.len() == 0 {
-        return move_json_response(&payload.cards.last().unwrap().to_string());
-    }
-    let first_card = Card::new((&payload.played[0]).clone());
-    let my_cards = Card::get_card_from_vec(payload.cards.clone());
-    let same_suit_cards = Card::get_same_suit_cards(my_cards.clone(), first_card.suit);
-    // log to terminal
-    // Card::log_vec_cards(same_suit_cards.clone());
-
-    if same_suit_cards.len() > 0 {
-        return move_json_response(&same_suit_cards.last().unwrap().to_string());
+/// This is the main function that makes the move.
+/// Even for starter code, it is quite complex because it has to analyze
+/// which card it can throw and only throw from the possible choices.
+pub fn make_move(payload: &payload_types::PlayPayload) -> Action {
+    // Case I: If no card is played, I can throw any card, no restriction
+    if payload.played.is_empty() {
+        return Action::Play(CardThrow(Card::new(payload.cards.last().unwrap())));
     }
 
-    match (payload.trump_suit.clone(), payload.trump_revealed.clone()) {
-        (TrumpSuitEnum::Card(trump_suit), TrumpSuitRevealedEnum::Revealed(revealer)) => {
-            let trump_revealed_this_round = revealer.hand == payload.hands_history.len() as i32 + 1;
-            let did_reveal_trump = revealer.player_id == payload.player_id;
+    // Case II: If someone has already played, I have to match the suit if available.
+    let my_cards = cards::get_card_from_vec(&payload.cards);
 
-            if trump_revealed_this_round && did_reveal_trump {
-                let trump_suit_cards = Card::get_same_suit_cards(
-                    my_cards.clone(),
-                    Card::new("X".to_string() + &trump_suit).suit,
-                );
-                match trump_suit_cards.last() {
-                    None => {}
-                    Some(c) => return move_json_response(&c.to_string()),
-                }
+    let this_hand = cards::get_card_from_vec(&payload.played);
+    let ongoing_suit = this_hand[0].suit;
+    // matching the suits.
+    let same_suit_cards = cards::get_same_suit_cards_if_available(&my_cards, ongoing_suit);
+
+    // If I have cards matching the suit, I must throw that
+    if let Some(card_choices) = same_suit_cards {
+        return Action::Play(CardThrow(*card_choices.last().unwrap()));
+    }
+
+    // Case III: I don't have any card matching the suit.
+    use payload_types::TrumpSuit;
+
+    // Case III a: I don't know the trump suit. I am probably not the bidder then, haha.
+    if let TrumpSuit(None) = payload.trump_suit {
+        // best action may be just to reveal the trump
+        return Action::Play(Trump(RevealOnly));
+    }
+
+    // Case III b: I know the trump suit, Someone Revealed it or I am the bidder, soon to be known
+    if let TrumpSuit(Some(trump_suit)) = &payload.trump_suit {
+        let trump_suit = Suit::from_string(trump_suit);
+
+        let max_in_this_hand = get_max_card(&this_hand, ongoing_suit, trump_suit);
+        let winning_cards = if let Some(max_in_this_hand) = max_in_this_hand {
+            get_higher_rank_cards_if_available(
+                &my_cards,
+                max_in_this_hand,
+                ongoing_suit,
+                trump_suit,
+            )
+        } else {
+            None
+        };
+
+        let trump_suit_cards = if let Some(cards) = winning_cards {
+            get_same_suit_cards_if_available(&cards, trump_suit)
+        } else {
+            get_same_suit_cards_if_available(&my_cards, trump_suit)
+        };
+
+        // Knowing trump is useful only when I have trump cards
+        if let Some(trump_suit_cards) = trump_suit_cards {
+            // Case III b A: I know and have trump cards, Trump is not revealed.
+            if let TrumpRevealed(None) = &payload.trump_revealed {
+                return Action::Play(Trump(RevealAndThrow(*trump_suit_cards.last().unwrap())));
             }
-            match my_cards.last() {
-                None => {}
-                Some(c) => return move_json_response(&c.to_string()),
+
+            // Case III b B: I know trump card, which is already revealed. I can throw trump card or any card depending on game.
+            if let TrumpRevealed(Some::<TrumpRevealer>(trump_revealer)) = &payload.trump_revealed {
+                let trump_revealed_in_this_hand =
+                    payload.hands_history.len() + 1 == trump_revealer.hand;
+                let i_revealed_trump_in_this_hand =
+                    trump_revealed_in_this_hand && (payload.player_id == trump_revealer.player_id);
+
+                if !i_revealed_trump_in_this_hand || !trump_revealed_in_this_hand {
+                    // If it is not me who revealed trump in this round, I can throw any card
+                    // Or it is not this round when trump was revealed, I can throw any card
+                    // return Action::Play(CardThrow(*my_cards.last().unwrap()));
+                    return Action::Play(CardThrow(*trump_suit_cards.last().unwrap()));
+                }
+                return Action::Play(CardThrow(*trump_suit_cards.last().unwrap()));
             }
         }
-        (TrumpSuitEnum::Card(trump_suit), TrumpSuitRevealedEnum::NotRevealed(_)) => {
-            let trump_suit_cards = Card::get_same_suit_cards(
-                my_cards.clone(),
-                Card::new("X".to_string() + &trump_suit).suit,
-            );
-            match trump_suit_cards.last() {
-                None => {}
-                Some(c) => {
-                    return reveal_trump_and_move_json_response(&c.to_string());
-                }
-            }
-            match my_cards.last() {
-                None => {}
-                Some(c) => {
-                    return reveal_trump_and_move_json_response(&c.to_string());
-                }
-            }
-        }
-
-        (_, _) => {}
     }
 
-    r#"{"revealTrump": true}"#.to_string()
+    return Action::Play(CardThrow(*my_cards.last().unwrap()));
 }
