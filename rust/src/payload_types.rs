@@ -1,16 +1,13 @@
 use serde::Deserialize;
-
-/// datatypes for  post request`/bid`
-
 // ********************** For /bid *************************************** \\
 
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct BidState {
-    pub defender_id: String,
-    pub challenger_id: String,
-    pub defender_bid: u32,
-    pub challenger_bid: u32,
+    pub defender_id: String,   // player_id of defender
+    pub challenger_id: String, // player_id of challenger
+    pub defender_bid: u32,     // current bid by defender
+    pub challenger_bid: u32,   // current bid by challenger
 }
 
 impl std::fmt::Display for BidState {
@@ -27,12 +24,12 @@ impl std::fmt::Display for BidState {
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct BidPayload {
-    pub player_id: String,
-    pub player_ids: [String; 4],
-    pub cards: Vec<String>,
-    pub time_remaining: f64,
-    pub bid_history: Vec<(String, u32)>,
-    pub bid_state: BidState,
+    pub player_id: String,               // My player_id
+    pub player_ids: [String; 4],         // All 4 player_ids
+    pub cards: Vec<String>,              // All 4 cards string
+    pub time_remaining: f64,             // time remaining float value
+    pub bid_history: Vec<(String, u32)>, // bid history, vector made of tuples (player_id, bid_by_plyer_id)
+    pub bid_state: BidState,             // current bid state
 }
 
 impl std::fmt::Display for BidPayload {
@@ -56,11 +53,11 @@ impl std::fmt::Display for BidPayload {
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ChooseTrumpPayload {
-    pub player_id: String,
-    pub player_ids: [String; 4],
-    pub cards: Vec<String>,
-    pub time_remaining: f64,
-    pub bid_history: Vec<(String, u32)>,
+    pub player_id: String,               // My player_id
+    pub player_ids: [String; 4],         // All 4 player_ids
+    pub cards: Vec<String>,              // All 4 cards string
+    pub time_remaining: f64,             // time remaining float value
+    pub bid_history: Vec<(String, u32)>, // bid history, vector made of tuples (player_id, bid_by_plyer_id)
 }
 
 impl std::fmt::Display for ChooseTrumpPayload {
@@ -79,22 +76,13 @@ impl std::fmt::Display for ChooseTrumpPayload {
     }
 }
 
-// {
-//     "playerId":"A2",
-//     "playerIds":["A1","B1","A2","B2"],
-//     "cards":["JS","TS","KH","9C"],
-//     "timeRemaining":1000,
-//     "bidHistory":[["A1",16],["B1",0]]
-// }
-
 // ********************** For /play *********************************** \\
-
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Team {
-    pub players: Vec<String>,
-    pub bid: u32,
-    pub won: u32,
+    pub players: [String; 2], // two players in a team
+    pub bid: u32,             // maximum bid among both teams (bid of won team)
+    pub won: u32,             // total points won by that team
 }
 impl std::fmt::Display for Team {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -117,7 +105,8 @@ pub enum TrumpSuitEnum {
 }
 #[derive(Clone, Deserialize, PartialEq, Debug)]
 #[serde(from = "TrumpSuitEnum")]
-pub struct TrumpSuit(pub Option<String>); // option version
+// this shows if trumpsuit is known to me(being bidder, or trump already revealed) Option<Suit>, i.e Some(Suit) or None
+pub struct TrumpSuit(pub Option<String>);
 impl From<TrumpSuitEnum> for TrumpSuit {
     fn from(t: TrumpSuitEnum) -> Self {
         match t {
@@ -130,8 +119,9 @@ impl From<TrumpSuitEnum> for TrumpSuit {
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct TrumpRevealer {
-    pub hand: usize,
-    pub player_id: String,
+    // Information of trump_revealer
+    pub hand: usize,       // The hand he revealed trump on
+    pub player_id: String, // player_id of trump_revealer
 }
 impl std::fmt::Display for TrumpRevealer {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -152,6 +142,9 @@ pub enum TrumpSuitRevealedEnum {
 
 #[derive(Clone, Deserialize, PartialEq, Debug)]
 #[serde(from = "TrumpSuitRevealedEnum")]
+// This shows if trump is Revealed,
+// if Yes, it contains the (Some(TrumpRevealer (hand, player_id)),) and
+// if No,  it contains the (None,) variant inside the Struct wrapped Option.
 pub struct TrumpRevealed(pub Option<TrumpRevealer>); // option version
 impl From<TrumpSuitRevealedEnum> for TrumpRevealed {
     fn from(t: TrumpSuitRevealedEnum) -> Self {
@@ -161,36 +154,21 @@ impl From<TrumpSuitRevealedEnum> for TrumpRevealed {
         }
     }
 }
-// #[derive(Deserialize, PartialEq)]
-// #[serde(from = "TrumpSuitRevealedEnum")]
-/*
-type TrumpRevealed = Option::<TrumpRevealer>;
-impl From<TrumpSuitRevealedEnum> for TrumpRevealed {
-    fn from(t : TrumpSuitRevealedEnum) -> Self {
-        match t {
-            TrumpSuitRevealedEnum::NotRevealed(_) => None,
-            TrumpSuitRevealedEnum::Revealed(trump_revealer) => Some(trump_revealer),
-        }
-    }
-} */
 
 // ******************************** main PlayPayLoad Struct here *******************************
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct PlayPayload {
-    pub player_id: String,
-    pub player_ids: [String; 4],
-    pub time_remaining: f64,
-    pub teams: [Team; 2],
-    pub cards: Vec<String>,
-    pub bid_history: Vec<(String, u32)>,
-
-    pub played: Vec<String>, // cards played in this hand, mover needs inference
-    pub hands_history: Vec<(String, Vec<String>, String)>, // (mover, cards, winner)
-    // #[serde(from = "TrumpSuitEnum")]
-    pub trump_suit: TrumpSuit,
-    // #[serde(from = "TrumpSuitRevealedEnum")]
-    pub trump_revealed: TrumpRevealed,
+    pub player_id: String,               // My player_id
+    pub player_ids: [String; 4],         // All 4 player_ids
+    pub time_remaining: f64,             // time remaining float value
+    pub teams: [Team; 2],                // Two teams
+    pub cards: Vec<String>,              // All remaining cards string
+    pub bid_history: Vec<(String, u32)>, // bid history, vector made of tuples (player_id, bid_by_plyer_id)
+    pub played: Vec<String>,             // cards played in this hand, mover needs inference
+    pub hands_history: Vec<(String, [String; 4], String)>, // player and winner of previous hands (mover, Vec<cardstring>, winner)
+    pub trump_suit: TrumpSuit,           // Trump Suit struct that wraps Option<Suit>, = either Some(Suit) or none
+    pub trump_revealed: TrumpRevealed,   // TrumpRevealed struct that wraps Option<TrumpRevealer>, = either Some(TrumpRevealer) or none
 }
 
 impl std::fmt::Display for PlayPayload {
@@ -216,21 +194,3 @@ impl std::fmt::Display for PlayPayload {
         write!(f, "}}")
     }
 }
-
-// {
-//     "playerId":"A2",
-//     "playerIds":["A1","B1","A2","B2"],
-//     "timeRemaining":1500,
-//     "teams":[
-//       {"players":["A1","A2"],"bid":17,"won":0},
-//       {"players":["B1","B2"],"bid":17,"won":4}
-//     ],
-//       "cards":["JS","TS","KH","9C","JD","7D","8D"],
-//       "bidHistory":[["A1",16],["B1",17],["A1",17],["B1",0],["A2",0],["B2",0]],
-//       "played":["9S","1S","8S"],
-//       "handsHistory":[
-//         ["A1",["7H","1H","8H","JH"],"B2"]
-//       ],
-//       "trumpSuit":false,
-//       "trumpRevealed":false
-// }

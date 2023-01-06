@@ -1,27 +1,31 @@
 use crate::cards::{self};
-pub enum TrumpCase {
-    RevealOnly,
-    RevealAndThrow(cards::Card),
-}
-pub enum PlayAction {
-    CardThrow(cards::Card),
-    Trump(TrumpCase),
-}
 
 pub enum Action {
-    Hi,
-    Bid(u32),
-    ChooseTrump(cards::Suit),
-    Play(PlayAction),
+    Hi,                       // game starts with a greeting `hi`
+    Bid(u32),                 // to chose  bid value 0 or 16 to 28
+    ChooseTrump(cards::Suit), // to choose a trump suit
+    Play(PlayAction),         // to play a game
 }
+pub enum PlayAction {
+    CardThrow(cards::Card), // Throw a card
+    Trump(TrumpCase),       // Reveal the trump, two cases:
+}
+pub enum TrumpCase {
+    RevealOnly, // I don't know the  trump suit, so I request to reveal it, I cannot throw a card without knowing it.
+    RevealAndThrow(cards::Card), // I know the trump suit, so I reveal it and throw a card with it.
+}
+
 use Action::*;
 use PlayAction::*;
 use TrumpCase::*;
 impl Action {
+    /// a method on Action that converts any action to suitable response in json format for output
     pub fn json_format(&self) -> String {
         format!("{}", self)
     }
 }
+
+/// this trait implementation allows us to format the response in json for any purpose, displaying or just formatting
 impl std::fmt::Display for Action {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{{")?;
