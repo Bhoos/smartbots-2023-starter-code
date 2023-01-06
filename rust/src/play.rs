@@ -18,7 +18,7 @@ use crate::payload_types::{self, TrumpRevealed, TrumpRevealer};
 /// which card it can throw and only throw from the possible choices.
 pub fn make_move(payload: &payload_types::PlayPayload) -> Action {
     // Case I: If no card is played, I can throw any card, no restriction
-    if payload.played.len() == 0 {
+    if payload.played.is_empty() {
         return Action::Play(CardThrow(Card::new(payload.cards.last().unwrap())));
     }
 
@@ -63,7 +63,7 @@ pub fn make_move(payload: &payload_types::PlayPayload) -> Action {
         let trump_suit_cards = if let Some(cards) = winning_cards {
             get_same_suit_cards_if_available(&cards, trump_suit)
         } else {
-            None
+            get_same_suit_cards_if_available(&my_cards, trump_suit)
         };
 
         // Knowing trump is useful only when I have trump cards

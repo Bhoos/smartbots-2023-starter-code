@@ -5,7 +5,7 @@ const PASS: u32 = 0;
 
 // a function to choose bid
 pub fn get_bid(payload: &BidPayload) -> Action {
-    let min_bid = if payload.bid_history.len() == 0 {
+    let min_bid = if payload.bid_history.is_empty() {
         // if no one bid, yet, bid 16
         MIN_BID
     } else {
