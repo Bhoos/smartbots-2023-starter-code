@@ -1,4 +1,8 @@
 use crate::action_types::{Action, PlayAction, TrumpCase};
+use crate::cards::{
+    get_higher_rank_cards, get_higher_rank_cards_if_available, get_max_card, get_same_suit_cards,
+    get_same_suit_cards_if_available,
+};
 
 // use Action::Play;
 use PlayAction::CardThrow;
@@ -19,10 +23,12 @@ pub fn make_move(payload: &payload_types::PlayPayload) -> Action {
     }
 
     // Case II: If someone has already played, I have to match the suit if available.
-    let first_card = Card::new(&payload.played[0]);
     let my_cards = cards::get_card_from_vec(&payload.cards);
+
+    let this_hand = cards::get_card_from_vec(&payload.played);
+    let ongoing_suit = this_hand[0].suit;
     // matching the suits.
-    let same_suit_cards = cards::get_same_suit_cards_if_available(&my_cards, first_card.suit);
+    let same_suit_cards = cards::get_same_suit_cards_if_available(&my_cards, ongoing_suit);
 
     // If I have cards matching the suit, I must throw that
     if let Some(card_choices) = same_suit_cards {
@@ -40,8 +46,25 @@ pub fn make_move(payload: &payload_types::PlayPayload) -> Action {
 
     // Case III b: I know the trump suit, Someone Revealed it or I am the bidder, soon to be known
     if let TrumpSuit(Some(trump_suit)) = &payload.trump_suit {
-        let trump_suit_cards =
-            cards::get_same_suit_cards_if_available(&my_cards, Suit::from_string(trump_suit));
+        let trump_suit = Suit::from_string(trump_suit);
+
+        let max_in_this_hand = get_max_card(&this_hand, ongoing_suit, trump_suit);
+        let winning_cards = if let Some(max_in_this_hand) = max_in_this_hand {
+            get_higher_rank_cards_if_available(
+                &my_cards,
+                max_in_this_hand,
+                ongoing_suit,
+                trump_suit,
+            )
+        } else {
+            None
+        };
+
+        let trump_suit_cards = if let Some(cards) = winning_cards {
+            get_same_suit_cards_if_available(&cards, trump_suit)
+        } else {
+            None
+        };
 
         // Knowing trump is useful only when I have trump cards
         if let Some(trump_suit_cards) = trump_suit_cards {

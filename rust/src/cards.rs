@@ -68,7 +68,7 @@ impl fmt::Display for Suit {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug)]
 pub struct Card {
     pub rank: u8,   // rank of card, used to compare the cards
     pub value: u8,  // value of card, 3, 2, 1, 1, 0, 0 ...
@@ -114,6 +114,34 @@ impl Card {
             suit,
         }
     }
+
+    pub fn cmp_using_ongoing_and_trump_suit(
+        self,
+        other: Self,
+        ongoing_suit: Suit,
+        trump_suit: Suit,
+    ) -> std::cmp::Ordering {
+        // both same suit
+        if self.suit == other.suit {
+            return self.rank.cmp(&other.rank);
+        }
+        // both different suit
+        if self.suit == trump_suit {
+            return std::cmp::Ordering::Greater;
+        }
+        if other.suit == trump_suit {
+            return std::cmp::Ordering::Less;
+        }
+        // both are not trump cards
+        if self.suit == ongoing_suit {
+            return std::cmp::Ordering::Greater;
+        }
+        if other.suit == ongoing_suit {
+            return std::cmp::Ordering::Less;
+        }
+        // both are not ongoing suits
+        return self.rank.cmp(&other.rank);
+    }
 }
 impl fmt::Display for Card {
     // allows us to print the card
@@ -121,6 +149,23 @@ impl fmt::Display for Card {
         write!(f, "{}{}", self.card as char, self.suit)
     }
 }
+
+/*impl core::cmp::Ord for Card {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.rank.cmp(&other.rank)
+    }
+}
+impl Eq for Card {}
+impl core::cmp::PartialOrd for Card {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+impl core::cmp::PartialEq for Card {
+    fn eq(&self, other: &Self) -> bool {
+        self.rank == other.rank
+    }
+}*/
 
 /// a function that convert Vector of String for card to Vector of Cards
 pub fn get_card_from_vec(cards_vec: &Vec<String>) -> Vec<Card> {
@@ -135,6 +180,78 @@ pub fn get_same_suit_cards(cards: &Vec<Card>, suit: Suit) -> Vec<Card> {
         .map(|&card| card)
         .collect();
     cards
+}
+
+#[allow(dead_code)]
+/// a function that gets only higher ranked cards, probably bad function
+fn get_higher_ranked_cards_any_suit(cards_vec: &Vec<Card>, the_card: Card) -> Vec<Card> {
+    cards_vec
+        .iter()
+        .filter(|&&a_card| a_card.rank > the_card.rank)
+        .map(|&card| card)
+        .collect()
+}
+#[allow(dead_code)]
+/// a function that gets higher ranked cards if available, better version of bad function
+fn get_higher_ranked_cards_any_suit_if_available(
+    cards: &Vec<Card>,
+    card: Card,
+) -> Option<Vec<Card>> {
+    let cards = get_higher_ranked_cards_any_suit(cards, card);
+    if cards.len() == 0 {
+        return None;
+    } else {
+        return Some(cards);
+    }
+}
+#[allow(dead_code)]
+/// a function that gets maximum card by rank, probably bad function
+fn get_max_card_of_any_suit(cards_vec: &Vec<Card>) -> Option<Card> {
+    cards_vec
+        .iter()
+        .map(|&card| card)
+        .max_by_key(|card| card.rank)
+}
+
+/// a function that gets higher ranked cards compared to cards, factoring the ongoing suit and trump suit
+pub fn get_higher_rank_cards(
+    cards_vec: &Vec<Card>,
+    the_card: Card,
+    ongoing_suit: Suit,
+    trump_suit: Suit,
+) -> Vec<Card> {
+    cards_vec
+        .iter()
+        .filter(|&&a_card| {
+            a_card.cmp_using_ongoing_and_trump_suit(the_card, ongoing_suit, trump_suit)
+                == std::cmp::Ordering::Greater
+        })
+        .map(|&card| card)
+        .collect()
+}
+
+/// a function that returns Option of available higher cards, factoring the ongoing suit and trump suit
+pub fn get_higher_rank_cards_if_available(
+    cards: &Vec<Card>,
+    card: Card,
+    ongoing_suit: Suit,
+    trump_suit: Suit,
+) -> Option<Vec<Card>> {
+    let cards = get_higher_rank_cards(cards, card, ongoing_suit, trump_suit);
+    if cards.len() == 0 {
+        return None;
+    } else {
+        return Some(cards);
+    }
+}
+
+pub fn get_max_card(cards_vec: &Vec<Card>, ongoing_suit: Suit, trump_suit: Suit) -> Option<Card> {
+    cards_vec
+        .iter()
+        .map(|&card| card)
+        .max_by(|&card_a, &card_b| {
+            card_a.cmp_using_ongoing_and_trump_suit(card_b, ongoing_suit, trump_suit)
+        })
 }
 
 /// a function that returns option representing Some(non_empty_vector_of_cards) or None, when same suit cards are none.
