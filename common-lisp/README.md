@@ -22,7 +22,7 @@ Clone this repo to **~/common-lisp/** folder or your quicklisp projects director
 Start sbcl, load this project and start the server.
 
 ```common-lisp
-	(ql:quicklod :29points)
+	(ql:quickload :29points)
 	(29points:start 8001)
 ```
 
